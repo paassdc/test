@@ -1,4 +1,3 @@
-#!groovy
 pipeline {
   agent none
   stages {
@@ -14,6 +13,11 @@ pipeline {
             echo 'what the hell！'
           }
         }
+      }
+    }
+    stage('step2') {
+      steps {
+        sleep 5
       }
     }
   }
