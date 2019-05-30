@@ -6,12 +6,12 @@ pipeline {
       parallel {
         stage('步骤1.1') {
           steps {
-            echo 'hello！'
+            echo 'for a branch!'
           }
         }
         stage('步骤1.2') {
           steps {
-            echo 'hell！'
+            echo 'what the hell！'
           }
         }
       }
