@@ -1,60 +1,52 @@
 pipeline {
   agent none
   stages {
-    stage('step1') {
-      parallel {
-        stage('step1.1') {
-          steps {
-            echo 'for a branch!'
-          }
-        }
-        stage('step1.2') {
-          steps {
-            echo 'what the hell!'
-          }
-        }
-      }
-    }
-    stage('step2') {
-      steps {
-        sleep 5
-      }
-    }
-    stage('step3') {
-      parallel {
-        stage('step3.1') {
-          steps {
-            echo 'build a repo here!'
-          }
-        }
-        stage('step3.2') {
-          agent any
-          steps {
-            echo 'send email'
-            timestamps() {
-              echo 'timestamp child?'
+        stage('Build') {
+            steps {
+                echo 'Building'
             }
-
-          }
         }
-      }
-    }
-    stage('step4') {
-      steps {
-        echo '44444'
-      }
-    }
-    stage('step5') {
-      steps {
-        sleep(unit: 'SECONDS', time: 10)
-        timestamps() {
-          sleep 4
-          echo 'what\'s the time?'
+        stage('Test') {
+            steps {
+                echo 'Testing'
+            }
         }
-
-      }
+        stage('Deploy - Staging') {
+            steps {
+                echo './deploy staging'
+                echo './run-smoke-tests'
+            }
+        }
+        stage('Sanity check') {
+            steps {
+                input "Does the staging environment look ok?"
+            }
+        }
+        stage('Deploy - Production') {
+            steps {
+                echo './deploy production'
+            }
+        }
     }
-  }
+
+    post {
+        always {
+            echo 'One way or another, I have finished'
+            // deleteDir() /* clean up our workspace */
+        }
+        success {
+            echo 'I succeeeded!'
+        }
+        unstable {
+            echo 'I am unstable :/'
+        }
+        failure {
+            echo 'I failed :('
+        }
+        changed {
+            echo 'Things were different before...'
+        }
+    }
   environment {
     Hell = 'O'
   }
